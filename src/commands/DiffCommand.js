@@ -1,6 +1,5 @@
-import GitUtilities from "../GitUtilities";
+import ScmUtilities from "../scm/ScmUtilities";
 import Command from "../Command";
-import ChildProcessUtilities from "../ChildProcessUtilities";
 import find from "lodash/find";
 
 export default class DiffCommand extends Command {
@@ -18,7 +17,7 @@ export default class DiffCommand extends Command {
       }
     }
 
-    if (!GitUtilities.hasCommit()) {
+    if (!ScmUtilities.hasCommit()) {
       callback(new Error("Can't diff. There are no commits in this repository, yet."));
       return;
     }
@@ -27,20 +26,15 @@ export default class DiffCommand extends Command {
       ? this.package.location
       : this.repository.rootPath;
 
-    this.lastCommit = GitUtilities.hasTags()
-      ? GitUtilities.getLastTaggedCommit()
-      : GitUtilities.getFirstCommit();
+    this.lastCommit = ScmUtilities.hasTags()
+      ? ScmUtilities.getLastTaggedCommit()
+      : ScmUtilities.getFirstCommit();
 
     callback(null, true);
   }
 
   execute(callback) {
-    ChildProcessUtilities.spawn("git", ["diff", this.lastCommit, "--color=auto", this.filePath], {}, (code) => {
-      if (code) {
-        callback(new Error("Errored while spawning `git diff`."));
-      } else {
-        callback(null, true);
-      }
-    });
+    ScmUtilities.diff(this.lastCommit, this.filePath, callback);
+
   }
 }

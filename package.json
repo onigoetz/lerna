@@ -1,5 +1,5 @@
 {
-  "name": "lerna",
+  "name": "lerna-hg",
   "version": "2.0.0-beta.38",
   "description": "Tool for managing JavaScript projects with multiple packages",
   "main": "lib/index.js",
@@ -15,12 +15,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lerna/lerna.git"
+    "url": "git+https://github.com/onigoetz/lerna-hg.git"
   },
   "author": "Sebastian McKenzie <sebmck@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lerna/lerna/issues"
+    "url": "https://github.com/onigoetz/lerna-hg/issues"
   },
   "homepage": "https://lernajs.io/",
   "dependencies": {
@@ -46,7 +46,7 @@
     "signal-exit": "^3.0.2"
   },
   "bin": {
-    "lerna": "./bin/lerna.js"
+    "lerna-hg": "./bin/lerna.js"
   },
   "devDependencies": {
     "babel-cli": "^6.7.5",

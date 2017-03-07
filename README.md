@@ -1,3 +1,7 @@
+
+> Lerna-hg is a fork of Lerna, the only difference is that Mercurial is supported as an alternative to Git.
+> This fork will be kept up-to-date as much as possible, I don't intend to diverge from the feature-set of the main lerna repository.
+
 <p align="center">
   <img alt="Lerna" src="https://cloud.githubusercontent.com/assets/952783/15271604/6da94f96-1a06-11e6-8b04-dc3171f79a90.png" width="480">
 </p>
@@ -7,10 +11,10 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/lerna"><img alt="NPM Status" src="https://img.shields.io/npm/v/lerna.svg?style=flat"></a>
-  <a href="https://travis-ci.org/lerna/lerna"><img alt="Travis Status" src="https://img.shields.io/travis/lerna/lerna/master.svg?style=flat&label=travis"></a>
-  <a href="https://ci.appveyor.com/project/lerna/lerna"><img alt="Appveyor Status" src="https://img.shields.io/appveyor/ci/lerna/lerna.svg"></a>
-  <a href="https://slack.lernajs.io/"><img alt="Slack Status" src="https://slack.lernajs.io/badge.svg"></a>
+  <a href="https://www.npmjs.com/package/lerna-hg"><img alt="NPM Status" src="https://img.shields.io/npm/v/lerna-hg.svg?style=flat"></a>
+  <a href="https://travis-ci.org/onigoetz/lerna-hg"><img alt="Travis Status" src="https://img.shields.io/travis/onigoetz/lerna-hg/master.svg?style=flat&label=travis"></a>
+  <a href="https://ci.appveyor.com/project/onigoetz/lerna-hg"><img alt="Appveyor Status" src="https://img.shields.io/appveyor/ci/onigoetz/lerna-hg.svg"></a>
+  <!--<a href="https://slack.lernajs.io/"><img alt="Slack Status" src="https://slack.lernajs.io/badge.svg"></a>-->
 </p>
 
 - [About](#about)
@@ -35,6 +39,7 @@ single repository.
 
 **Lerna is a tool that optimizes the workflow around managing multi-package
 repositories with git and npm.**
+
 
 ### What does a Lerna repo look like?
 
@@ -65,20 +70,20 @@ The two primary commands in Lerna are `lerna bootstrap` and `lerna publish`.
 Let's start by installing Lerna globally with [npm](https://www.npmjs.com/).
 
 ```sh
-$ npm install --global lerna
+$ npm install --global lerna-hg
 ```
 
 Next we'll create a new [git](https://git-scm.com/) repository:
 
 ```sh
-$ git init lerna-repo
+$ hg init lerna-repo
 $ cd lerna-repo
 ```
 
 And now let's turn it into a Lerna repo:
 
 ```sh
-$ lerna init
+$ lerna-hg init
 ```
 
 Your repository should now look like this:
@@ -119,16 +124,16 @@ See [FAQ.md](FAQ.md).
 ### init
 
 ```sh
-$ lerna init
+$ lerna-hg init
 ```
 
 Create a new Lerna repo or upgrade an existing repo to the current version of Lerna.
 
-> Lerna assumes the repo has already been initialized with `git init`.
+> Lerna assumes the repo has already been initialized with `hg init`.
 
 When run, this command will:
 
-1. Add `lerna` as a [`devDependency`](https://docs.npmjs.com/files/package.json#devdependencies) in `package.json` if it doesn't already exist.
+1. Add `lerna-hg` as a [`devDependency`](https://docs.npmjs.com/files/package.json#devdependencies) in `package.json` if it doesn't already exist.
 2. Create a `lerna.json` config file to store the `version` number.
 
 Example output on a new git repo:
@@ -145,7 +150,7 @@ $ Successfully created Lerna files
 #### --independent, -i
 
 ```sh
-$ lerna init --independent
+$ lerna-hg init --independent
 ```
 
 This flag tells Lerna to use independent versioning mode.
@@ -153,7 +158,7 @@ This flag tells Lerna to use independent versioning mode.
 ### bootstrap
 
 ```sh
-$ lerna bootstrap
+$ lerna-hg bootstrap
 ```
 
 Bootstrap the packages in the current Lerna repo.
@@ -165,7 +170,7 @@ When run, this command will:
 2. Symlink together all Lerna `packages` that are dependencies of each other.
 3. `npm prepublish` all bootstrapped packages.
 
-`lerna bootstrap` respects the `--ignore`, `--scope` and `--include-filtered-dependencies` flags (see [Flags](#flags)).
+`lerna-hg bootstrap` respects the `--ignore`, `--scope` and `--include-filtered-dependencies` flags (see [Flags](#flags)).
 
 #### How `bootstrap` works
 
@@ -201,7 +206,7 @@ Let's use `babel` as an example.
 ### publish
 
 ```sh
-$ lerna publish
+$ lerna-hg publish
 ```
 
 Publish packages in the current Lerna project. When run, this command does the following:
@@ -238,7 +243,7 @@ For more information, see the package.json [dependencies](https://docs.npmjs.com
 #### --npm-tag [tagname]
 
 ```sh
-$ lerna publish --npm-tag=next
+$ lerna-hg publish --npm-tag=next
 ```
 
 When run with this flag, `publish` will publish to npm with the given npm [dist-tag](https://docs.npmjs.com/cli/dist-tag) (defaults to `latest`).
@@ -251,7 +256,7 @@ This option can be used to publish a [`prerelease`](http://carrot.is/coding/npm_
 #### --canary, -c
 
 ```sh
-$ lerna publish --canary
+$ lerna-hg publish --canary
 ```
 
 When run with this flag, `publish` publishes packages in a more granular way (per commit). Before publishing to npm, it creates the new `version` tag by taking the current `version` and appending the current git sha (ex: `1.0.0-alpha.81e3b443`).
@@ -269,7 +274,7 @@ When run with this flag, `publish` will push the git changes to the specified re
 #### --skip-git
 
 ```sh
-$ lerna publish --skip-git
+$ lerna-hg publish --skip-git
 ```
 
 When run with this flag, `publish` will publish to npm without running any of the git commands.
@@ -279,7 +284,7 @@ When run with this flag, `publish` will publish to npm without running any of th
 #### --skip-npm
 
 ```sh
-$ lerna publish --skip-npm
+$ lerna-hg publish --skip-npm
 ```
 
 When run with this flag, `publish` will update all `package.json` package
@@ -299,9 +304,9 @@ dependencies, without committing, tagging, pushing or publishing.
 #### --force-publish [packages]
 
 ```sh
-$ lerna publish --force-publish=package-2,package-4
+$ lerna-hg publish --force-publish=package-2,package-4
 # force publish all packages
-$ lerna publish --force-publish=*
+$ lerna-hg publish --force-publish=*
 ```
 
 When run with this flag, `publish` will force publish the specified packages (comma-separated) or all packages using `*`.
@@ -311,7 +316,7 @@ When run with this flag, `publish` will force publish the specified packages (co
 #### --yes
 
 ```sh
-$ lerna publish --canary --yes
+$ lerna-hg publish --canary --yes
 # skips `Are you sure you want to publish the above changes?`
 ```
 
@@ -321,7 +326,7 @@ Useful in [Continuous integration (CI)](https://en.wikipedia.org/wiki/Continuous
 #### --repo-version
 
 ```sh
-$ lerna publish --repo-version 1.0.1
+$ lerna-hg publish --repo-version 1.0.1
 # applies version and skips `Select a new version for...` prompt
 ```
 
@@ -341,7 +346,7 @@ to certain guidelines, such as projects which use [commitizen](https://github.co
 ### updated
 
 ```sh
-$ lerna updated
+$ lerna-hg updated
 ```
 
 Check which `packages` have changed since the last release (the last git tag).
@@ -355,21 +360,21 @@ Lerna determines the last git tag created and runs `git diff --name-only v6.8.1`
 ### clean
 
 ```sh
-$ lerna clean
+$ lerna-hg clean
 ```
 
 Remove the `node_modules` directory from all packages.
 
-`lerna clean` respects the `--ignore`, `--scope`, and `--yes` flags (see [Flags](#flags)).
+`lerna-hg clean` respects the `--ignore`, `--scope`, and `--yes` flags (see [Flags](#flags)).
 
 ### diff
 
 ```sh
-$ lerna diff [package?]
+$ lerna-hg diff [package?]
 
-$ lerna diff
+$ lerna-hg diff
 # diff a specific package
-$ lerna diff package-name
+$ lerna-hg diff package-name
 ```
 
 Diff all packages or a single package since the last release.
@@ -379,7 +384,7 @@ Diff all packages or a single package since the last release.
 ### ls
 
 ```sh
-$ lerna ls
+$ lerna-hg ls
 ```
 
 List all of the public packages in the current Lerna repo.
@@ -389,9 +394,9 @@ List all of the public packages in the current Lerna repo.
 ### run
 
 ```sh
-$ lerna run [script] # runs npm run my-script in all packages that have it
-$ lerna run test
-$ lerna run build
+$ lerna-hg run [script] # runs npm run my-script in all packages that have it
+$ lerna-hg run test
+$ lerna-hg run build
 ```
 
 Run an [npm script](https://docs.npmjs.com/misc/scripts) in each package that contains that script.
@@ -399,23 +404,23 @@ Run an [npm script](https://docs.npmjs.com/misc/scripts) in each package that co
 `lerna run` respects the `--concurrency`, `--scope` and `ignore` flags (see [Flags](#flags)).
 
 ```sh
-$ lerna run --scope my-component test
+$ lerna-hg run --scope my-component test
 ```
 
 ### exec
 
 ```sh
-$ lerna exec -- [command] # runs the command in all packages
-$ lerna exec -- rm -rf ./node_modules
-$ lerna exec -- protractor conf.js
+$ lerna-hg exec -- [command] # runs the command in all packages
+$ lerna-hg exec -- rm -rf ./node_modules
+$ lerna-hg exec -- protractor conf.js
 ```
 
 Run an arbitrary command in each package.
 
-`lerna exec` respects the `--concurrency`, `--scope` and `--ignore` flags (see [Flags](#flags)).
+`lerna-hg exec` respects the `--concurrency`, `--scope` and `--ignore` flags (see [Flags](#flags)).
 
 ```sh
-$ lerna exec --scope my-component -- ls -la
+$ lerna-hg exec --scope my-component -- ls -la
 ```
 
 > Hint: The commands are spawned in parallel, using the concurrency given.
@@ -423,13 +428,13 @@ $ lerna exec --scope my-component -- ls -la
 > If you want to run the command in one package after another, use it like this:
 
 ```sh
-$ lerna exec --concurrency 1 -- ls -la
+$ lerna-hg exec --concurrency 1 -- ls -la
 ```
 
 ### import
 
 ```sh
-$ lerna import <path-to-external-repository>
+$ lerna-hg import <path-to-external-repository>
 ```
 
 Import the package at `<path-to-external-repository>`, with commit history,
@@ -447,7 +452,7 @@ Lerna will log to a `lerna-debug.log` file (same as `npm-debug.log`) when it enc
 
 Lerna also has support for [scoped packages](https://docs.npmjs.com/misc/scope).
 
-Running `lerna` without arguments will show all commands/options.
+Running `lerna-hg` without arguments will show all commands/options.
 
 ### lerna.json
 
@@ -538,7 +543,7 @@ command-line with `--example-option=baz`.
 How many threads to use when Lerna parallelizes the tasks (defaults to `4`)
 
 ```sh
-$ lerna publish --concurrency 1
+$ lerna-hg publish --concurrency 1
 ```
 
 #### --scope [glob]
@@ -546,11 +551,11 @@ $ lerna publish --concurrency 1
 Scopes a command to a subset of packages.
 
 ```sh
-$ lerna exec --scope my-component -- ls -la
+$ lerna-hg exec --scope my-component -- ls -la
 ```
 
 ```sh
-$ lerna run --scope toolbar-* test
+$ lerna-hg run --scope toolbar-* test
 ```
 
 #### --ignore [glob]
@@ -558,7 +563,7 @@ $ lerna run --scope toolbar-* test
 Excludes a subset of packages when running a command.
 
 ```sh
-$ lerna bootstrap --ignore component-*
+$ lerna-hg bootstrap --ignore component-*
 ```
 
 The `ignore` flag, when used with the `bootstrap` command, can also be set in `lerna.json` under the `commands.bootstrap` key. The command-line flag will take precendence over this option.
@@ -590,12 +595,12 @@ Used in combination with any command that accepts `--scope` (`bootstrap`, `clean
 This is useful for situations where you want to "set up" a single package that relies on other packages being set up.
 
 ```sh
-$ lerna bootstrap --scope my-component --include-filtered-dependencies
+$ lerna-hg bootstrap --scope my-component --include-filtered-dependencies
 # my-component and all of its dependencies will be bootstrapped
 ```
 
 ```sh
-$ lerna bootstrap --scope "package-*" --ignore "package-util-*" --include-filtered-dependencies
+$ lerna-hg bootstrap --scope "package-*" --ignore "package-util-*" --include-filtered-dependencies
 # all package-util's will be ignored unless they are depended upon by a
 # package matched by "package-*"
 ```
@@ -607,8 +612,8 @@ Only will bump versions for packages that have been updated explicitly rather th
 > This may not make sense for a major version bump since other packages that depend on the updated packages wouldn't be updated.
 
 ```sh
-$ lerna updated --only-explicit-updates
-$ lerna publish --only-explicit-updates
+$ lerna-hg updated --only-explicit-updates
+$ lerna-hg publish --only-explicit-updates
 ```
 
 Ex: in Babel, `babel-types` is depended upon by all packages in the monorepo (over 100). However, Babel uses `^` for most of its dependencies so it isn't necessary to bump the versions of all packages if only `babel-types` is updated. This option allows only the packages that have been explicitly updated to make a new version.

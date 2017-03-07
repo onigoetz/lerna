@@ -2,7 +2,7 @@ import UpdatedPackagesCollector from "../UpdatedPackagesCollector";
 import FileSystemUtilities from "../FileSystemUtilities";
 import PackageUtilities from "../PackageUtilities";
 import PromptUtilities from "../PromptUtilities";
-import GitUtilities from "../GitUtilities";
+import ScmUtilities from "../scm/ScmUtilities";
 import NpmUtilities from "../NpmUtilities";
 import Command from "../Command";
 import semver from "semver";
@@ -127,7 +127,7 @@ export default class PublishCommand extends Command {
       if (this.flags.canary) {
         this.logger.info("Resetting git state");
         // reset since the package.json files are changed
-        GitUtilities.checkoutChanges("packages/*/package.json");
+        ScmUtilities.checkoutChanges("packages/*/package.json");
       }
 
       this.npmUpdateAsLatest((err) => {
@@ -139,7 +139,7 @@ export default class PublishCommand extends Command {
         if (!(this.flags.canary || this.flags.skipGit)) {
           this.logger.info("Pushing tags to git...");
           this.logger.newLine();
-          GitUtilities.pushWithTags(this.flags.gitRemote || this.repository.publishConfig.gitRemote || "origin", this.tags);
+          ScmUtilities.pushWithTags(this.flags.gitRemote || this.repository.publishConfig.gitRemote, this.tags);
         }
 
         let message = "Successfully published:";
@@ -206,7 +206,7 @@ export default class PublishCommand extends Command {
   }
 
   getCanaryVersionSuffix() {
-    return "-alpha." + GitUtilities.getCurrentSHA().slice(0, 8);
+    return "-alpha." + ScmUtilities.getCurrentSHA().slice(0, 8);
   }
 
   promptVersion(packageName, currentVersion, callback) {
@@ -263,7 +263,7 @@ export default class PublishCommand extends Command {
     this.repository.lernaJson.version = this.masterVersion;
     FileSystemUtilities.writeFileSync(this.repository.lernaJsonLocation, JSON.stringify(this.repository.lernaJson, null, "  "));
     if (!this.flags.skipGit) {
-      GitUtilities.addFile(this.repository.lernaJsonLocation);
+      ScmUtilities.addFile(this.repository.lernaJsonLocation);
     }
   }
 
@@ -291,7 +291,7 @@ export default class PublishCommand extends Command {
     });
 
     if (!(this.flags.canary || this.flags.skipGit)) {
-      changedFiles.forEach(GitUtilities.addFile);
+      changedFiles.forEach(ScmUtilities.addFile);
     }
   }
 
@@ -325,16 +325,17 @@ export default class PublishCommand extends Command {
     const tags = this.updates.map((update) => `${update.package.name}@${this.updatesVersions[update.package.name]}`);
     const message = this.flags.message || tags.reduce((msg, tag) => msg + `${EOL} - ${tag}`, `Publish${EOL}`);
 
-    GitUtilities.commit(message);
-    tags.forEach(GitUtilities.addTag);
+    ScmUtilities.commit(message);
+    const sha = ScmUtilities.getCurrentSHA();
+    tags.forEach((tag) => ScmUtilities.addTag(tag, sha));
     return tags;
   }
 
   gitCommitAndTagVersion(version) {
     const tag = "v" + version;
     const message = this.flags.message || tag;
-    GitUtilities.commit(message);
-    GitUtilities.addTag(tag);
+    ScmUtilities.commit(message);
+    ScmUtilities.addTag(tag, ScmUtilities.getCurrentSHA());
     return tag;
   }
 

@@ -3,7 +3,7 @@
 To get started with the repo:
 
 ```sh
-$ git clone git@github.com:lerna/lerna.git && cd lerna
+$ git clone git@github.com:onigoetz/lerna-hg.git && cd lerna
 $ npm install
 ```
 

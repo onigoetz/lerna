@@ -1,5 +1,5 @@
-import ChildProcessUtilities from "./ChildProcessUtilities";
-import logger from "./logger";
+import ChildProcessUtilities from "../ChildProcessUtilities";
+import logger from "../logger";
 import escapeArgs from "command-join";
 
 export default class GitUtilities {
@@ -25,7 +25,7 @@ export default class GitUtilities {
   }
 
   @logger.logifySync()
-  static addTag(tag) {
+  static addTag(tag, sha) { //eslint-disable-line no-unused-vars
     ChildProcessUtilities.execSync("git tag " + tag);
   }
 
@@ -57,6 +57,11 @@ export default class GitUtilities {
 
   @logger.logifySync()
   static pushWithTags(remote, tags) {
+
+    if (!remote) {
+      remote = "origin";
+    }
+
     ChildProcessUtilities.execSync(`git push ${remote} ${GitUtilities.getCurrentBranch()}`);
     ChildProcessUtilities.execSync(`git push ${remote} ${tags.join(" ")}`);
   }
@@ -71,9 +76,26 @@ export default class GitUtilities {
     return ChildProcessUtilities.execSync("git describe --tags " + commit);
   }
 
+  static associatedCommits(sha) {
+    // if it's a merge commit, it will return all the commits that were part of the merge
+    // ex: If `ab7533e` had 2 commits, ab7533e^..ab7533e would contain 2 commits + the merge commit
+    return sha.slice(0, 8) + "^.." + sha.slice(0, 8);
+  }
+
   @logger.logifySync()
   static diffSinceIn(since, location) {
     return ChildProcessUtilities.execSync("git diff --name-only " + since + " -- " + escapeArgs(location));
+  }
+
+  @logger.logifyAsync()
+  static diff(lastCommit, location, callback) {
+    ChildProcessUtilities.spawn("git", ["diff", lastCommit, "--color=auto", escapeArgs(location)], {}, (code) => {
+      if (code) {
+        callback(new Error("Errored while spawning `git diff`."));
+      } else {
+        callback(null, true);
+      }
+    });
   }
 
   @logger.logifySync()

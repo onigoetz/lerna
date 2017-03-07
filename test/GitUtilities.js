@@ -1,6 +1,6 @@
 import assert from "assert";
 
-import GitUtilities from "../src/GitUtilities";
+import GitUtilities from "../src/scm/GitUtilities";
 
 /**
  * Yes, I am aware that these aren't actually tests.

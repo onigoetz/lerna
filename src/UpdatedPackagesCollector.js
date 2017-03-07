@@ -1,4 +1,4 @@
-import GitUtilities from "./GitUtilities";
+import ScmUtilities from "./scm/ScmUtilities";
 import progressBar from "./progressBar";
 import minimatch from "minimatch";
 import logger from "./logger";
@@ -28,10 +28,10 @@ export default class UpdatedPackagesCollector {
   collectUpdatedPackages() {
     logger.info("Checking for updated packages...");
 
-    const hasTags = GitUtilities.hasTags();
+    const hasTags = ScmUtilities.hasTags();
 
     if (hasTags) {
-      const tag = GitUtilities.getLastTag();
+      const tag = ScmUtilities.getLastTag();
       logger.info("Comparing with: " + tag);
     } else {
       logger.info("No tags found! Comparing with initial commit.");
@@ -47,12 +47,12 @@ export default class UpdatedPackagesCollector {
       if (this.flags.canary !== true) {
         currentSHA = this.flags.canary;
       } else {
-        currentSHA = GitUtilities.getCurrentSHA();
+        currentSHA = ScmUtilities.getCurrentSHA();
       }
 
-      commits = this.getAssociatedCommits(currentSHA);
+      commits = ScmUtilities.associatedCommits(currentSHA);
     } else if (hasTags) {
-      commits = GitUtilities.describeTag(GitUtilities.getLastTaggedCommitInBranch());
+      commits = ScmUtilities.describeTag(ScmUtilities.getLastTaggedCommitInBranch());
     }
 
     const updatedPackages = {};
@@ -141,15 +141,9 @@ export default class UpdatedPackagesCollector {
     });
   }
 
-  getAssociatedCommits(sha) {
-    // if it's a merge commit, it will return all the commits that were part of the merge
-    // ex: If `ab7533e` had 2 commits, ab7533e^..ab7533e would contain 2 commits + the merge commit
-    return sha.slice(0, 8) + "^.." + sha.slice(0, 8);
-  }
-
   hasDiffSinceThatIsntIgnored(pkg, commits) {
     const folder = path.relative(this.repository.rootPath, pkg.location);
-    const diff = GitUtilities.diffSinceIn(commits, pkg.location);
+    const diff = ScmUtilities.diffSinceIn(commits, pkg.location);
 
     if (diff === "") {
       return false;

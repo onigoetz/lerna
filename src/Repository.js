@@ -1,4 +1,4 @@
-import GitUtilities from "./GitUtilities";
+import ScmUtilities from "./scm/ScmUtilities";
 import FileSystemUtilities from "./FileSystemUtilities";
 import PackageUtilities from "./PackageUtilities";
 import Package from "./Package";
@@ -10,12 +10,15 @@ const DEFAULT_PACKAGE_GLOB = "packages/*";
 
 export default class Repository {
   constructor() {
-    if (!GitUtilities.isInitialized()) {
+    ScmUtilities.detectScm();
+
+    if (!ScmUtilities.isInitialized()) {
       logger.info("Initializing Git repository.");
-      GitUtilities.init();
+      ScmUtilities.init();
     }
 
-    this.rootPath = path.resolve(GitUtilities.getTopLevelDirectory());
+    this.rootPath = path.resolve(ScmUtilities.getTopLevelDirectory());
+
     this.lernaJsonLocation = path.join(this.rootPath, "lerna.json");
     this.packageJsonLocation = path.join(this.rootPath, "package.json");
     this.packagesLocation = path.join(this.rootPath, "packages"); // TODO: Kill this.

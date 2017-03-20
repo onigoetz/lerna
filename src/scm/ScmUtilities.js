@@ -58,12 +58,20 @@ export default class ScmUtilities {
     return ScmUtilities.getSCM().getLastTaggedCommit();
   }
 
+  static getLastTaggedCommitInBranch() {
+    return ScmUtilities.getSCM().getLastTaggedCommitInBranch();
+  }
+
   static getFirstCommit() {
     return ScmUtilities.getSCM().getFirstCommit();
   }
 
   static pushWithTags(origin, tags) {
     return ScmUtilities.getSCM().pushWithTags(origin, tags);
+  }
+
+  static getLastTag() {
+    return ScmUtilities.getSCM().getLastTag();
   }
 
   static describeTag(commit) {
@@ -96,6 +104,10 @@ export default class ScmUtilities {
 
   static getCurrentBranch() {
     return ScmUtilities.getSCM().getCurrentBranch();
+  }
+
+  static getCurrentBranchDescription() {
+    return ScmUtilities.getSCM().getCurrentBranchDescription();
   }
 
   static init() {

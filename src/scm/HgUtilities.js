@@ -48,6 +48,12 @@ export default class HgUtilities {
   }
 
   @logger.logifySync()
+  static getLastTaggedCommitInBranch() {
+    const tagName = HgUtilities.getLastTag();
+    return ChildProcessUtilities.execSync(`hg log -r "${tagName}" --template '{node}'`);
+  }
+
+  @logger.logifySync()
   static getFirstCommit() {
     return ChildProcessUtilities.execSync("hg log -r '0' -l 1 --template '{node}'");
   }
@@ -60,6 +66,11 @@ export default class HgUtilities {
     }
 
     ChildProcessUtilities.execSync(`hg push ${remote}`);
+  }
+
+  @logger.logifySync()
+  static getLastTag() {
+    return ChildProcessUtilities.execSync("hg parents --template '{latesttag}'");
   }
 
   @logger.logifySync()
@@ -107,6 +118,11 @@ export default class HgUtilities {
 
   @logger.logifySync()
   static getCurrentBranch() {
+    return ChildProcessUtilities.execSync("hg branch");
+  }
+
+  @logger.logifySync()
+  static getCurrentBranchDescription() {
     return ChildProcessUtilities.execSync("hg branch");
   }
 

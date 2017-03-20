@@ -57,7 +57,6 @@ export default class GitUtilities {
 
   @logger.logifySync()
   static pushWithTags(remote, tags) {
-
     if (!remote) {
       remote = "origin";
     }

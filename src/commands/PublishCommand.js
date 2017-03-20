@@ -18,7 +18,7 @@ export default class PublishCommand extends Command {
       this.logger.info("Publishing canary build");
     }
 
-    const currentBranch = GitUtilities.getCurrentBranchDescription();
+    const currentBranch = ScmUtilities.getCurrentBranchDescription();
     if (currentBranch === "") {
       callback("You are working on detached branch, create new branch to publish changes.");
     }

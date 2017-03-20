@@ -17,7 +17,8 @@ export default class Repository {
       ScmUtilities.init();
     }
 
-    this.rootPath = path.resolve(ScmUtilities.getTopLevelDirectory());
+    //this.rootPath = path.resolve(ScmUtilities.getTopLevelDirectory());
+    this.rootPath = process.cwd();
 
     this.lernaJsonLocation = path.join(this.rootPath, "lerna.json");
     this.packageJsonLocation = path.join(this.rootPath, "package.json");
